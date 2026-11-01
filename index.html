@@ -7,64 +7,107 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0b0e14; color: #fff; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .container { max-width: 900px; width: 100%; }
+    body { background-color: #0b0e14; color: #fff; display: flex; flex-direction: column; align-items: center; }
     
-    /* Header & Banner */
-    .header { text-align: center; margin-bottom: 25px; }
-    .banner { width: 100%; height: 220px; background: linear-gradient(135deg, #1f293d, #111827); border-radius: 12px; border: 1px solid #2a364f; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-    .banner h1 { font-size: 2.2rem; color: #00ff88; text-transform: uppercase; letter-spacing: 2px; }
-    .banner p { color: #9ca3af; margin-top: 8px; }
+    /* Top Navigation Tabs */
+    .nav-tabs { width: 100%; background: #0f141d; border-bottom: 2px solid #1a2332; display: flex; justify-content: center; overflow-x: auto; padding: 10px 0; }
+    .nav-tab { padding: 8px 15px; margin: 0 4px; background: #151d2a; border: 1px solid #222f43; border-radius: 4px; color: #9ca3af; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+    .nav-tab:hover, .nav-tab.active { background: #1e293b; color: #00ff88; border-color: #00ff88; }
+
+    .container { max-width: 950px; width: 100%; padding: 20px; }
+
+    /* Main Skin Banner Card */
+    .skin-banner-card { background: #111823; border: 1px solid #1f2d42; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+    .skin-title { font-size: 1.3rem; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; color: #fff; }
+    .skin-banner-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 8px; border: 1px solid #253650; margin-bottom: 15px; }
+    .skin-value { font-size: 1.8rem; font-weight: bold; color: #00ff88; margin: 10px 0; }
+    .rules-box { text-align: left; background: #080b10; padding: 15px; border-radius: 6px; border: 1px solid #1a2332; font-size: 0.85rem; color: #9ca3af; margin-top: 15px; line-height: 1.5; }
+    .rules-box b { color: #fff; }
 
     /* Roleta Style CS2 */
-    .roulette-section { margin: 30px 0; background: #131a26; padding: 20px; border-radius: 12px; border: 1px solid #2a364f; text-align: center; }
-    .roulette-container { position: relative; width: 100%; height: 140px; overflow: hidden; background: #090d14; border-radius: 8px; border: 2px solid #1f293d; margin: 15px 0; }
-    .roulette-track { display: flex; position: absolute; left: 0; top: 10px; transition: transform 5s cubic-bezier(0.15, 0.9, 0.2, 1); }
-    .user-card { width: 120px; height: 120px; margin: 0 5px; background: #192231; border-radius: 8px; border: 1px solid #2e3d59; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-    .user-card img { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 8px; border: 2px solid #00ff88; }
-    .user-card span { font-size: 0.8rem; font-weight: bold; color: #e5e7eb; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .roulette-section { margin: 30px 0; background: #111823; padding: 20px; border-radius: 10px; border: 1px solid #1f2d42; text-align: center; }
+    .roulette-container { position: relative; width: 100%; height: 130px; overflow: hidden; background: #080b10; border-radius: 6px; border: 2px solid #1f2d42; margin: 15px 0; }
+    .roulette-track { display: flex; position: absolute; left: 0; top: 8px; transition: transform 5s cubic-bezier(0.15, 0.9, 0.2, 1); }
+    .user-card { width: 110px; height: 110px; margin: 0 4px; background: #162030; border-radius: 6px; border: 1px solid #293a56; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+    .user-card img { width: 50px; height: 50px; border-radius: 50%; margin-bottom: 6px; border: 2px solid #00ff88; }
+    .user-card span { font-size: 0.75rem; font-weight: bold; color: #e5e7eb; max-width: 95px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     
-    .pointer { position: absolute; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; z-index: 10; }
-    .pointer-top { top: 0; border-top: 14px solid #00ff88; }
-    .pointer-bottom { bottom: 0; border-bottom: 14px solid #00ff88; }
+    .pointer { position: absolute; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; z-index: 10; }
+    .pointer-top { top: 0; border-top: 12px solid #00ff88; }
+    .pointer-bottom { bottom: 0; border-bottom: 12px solid #00ff88; }
 
-    .btn { background: #00ff88; color: #000; font-weight: bold; border: none; padding: 12px 24px; font-size: 1rem; border-radius: 6px; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
-    .btn:hover { background: #00cc6a; box-shadow: 0 0 15px rgba(0,255,136,0.4); }
+    /* Últimas Entradas Grid */
+    .entries-section { margin: 30px 0; background: #111823; padding: 20px; border-radius: 10px; border: 1px solid #1f2d42; }
+    .entries-section h3 { text-align: center; text-transform: uppercase; margin-bottom: 15px; font-size: 1rem; letter-spacing: 1px; color: #9ca3af; }
+    .entries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
+    .entry-item { background: #162030; border: 1px solid #253650; border-radius: 6px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .entry-item img { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 5px; }
+    .entry-item span { font-size: 0.7rem; color: #d1d5db; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
 
-    /* Formulario */
-    .form-section { background: #131a26; padding: 25px; border-radius: 12px; border: 1px solid #2a364f; margin-top: 20px; }
+    /* Formulário */
+    .form-section { background: #111823; padding: 25px; border-radius: 10px; border: 1px solid #1f2d42; margin-top: 30px; }
     .form-group { margin-bottom: 15px; text-align: left; }
-    .form-group label { display: block; margin-bottom: 6px; color: #9ca3af; font-size: 0.9rem; }
-    .form-group input { width: 100%; padding: 10px; background: #090d14; border: 1px solid #2a364f; border-radius: 6px; color: #fff; font-size: 1rem; }
+    .form-group label { display: block; margin-bottom: 6px; color: #9ca3af; font-size: 0.85rem; text-transform: uppercase; }
+    .form-group input { width: 100%; padding: 10px; background: #080b10; border: 1px solid #1f2d42; border-radius: 6px; color: #fff; font-size: 1rem; }
     .form-group input:focus { border-color: #00ff88; outline: none; }
+    
+    .btn { background: #00ff88; color: #000; font-weight: bold; border: none; padding: 12px 24px; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: 0.2s; text-transform: uppercase; width: 100%; }
+    .btn:hover { background: #00cc6a; box-shadow: 0 0 15px rgba(0,255,136,0.4); }
   </style>
 </head>
 <body>
+
+  <!-- Abas de Navegação Superiores -->
+  <div class="nav-tabs">
+    <div class="nav-tab active">Sorteio Diário</div>
+    <div class="nav-tab">Sorteio CSGONET Mensal</div>
+    <div class="nav-tab">Sorteio CSGONET Especial</div>
+    <div class="nav-tab">Sorteio Contrato</div>
+    <div class="nav-tab">Sorteio VIP</div>
+    <div class="nav-tab">LivePix</div>
+  </div>
+
   <div class="container">
-    <div class="header">
-      <div class="banner">
-        <h1>Sorteio de Skins CS2</h1>
-        <p>Deposite, envie o comprovante e concorra na roleta ao vivo!</p>
+    
+    <!-- Banner Principal da Skin -->
+    <div class="skin-banner-card">
+      <div class="skin-title">Sorteio Diário CSGONET ★ Bowie Autotronic</div>
+      <img src="https://images.unsplash.com/photo-1593118247619-e2d6f055728a?auto=format&fit=crop&w=800&q=80" class="skin-banner-img" alt="Skin CS2" />
+      <div class="skin-value">R$ 1.200,00</div>
+      <div class="rules-box">
+        <p>⭐ <b>SORTEIO EXCLUSIVO</b> para quem depositar no MÍNIMO $1 dólar com o cupom na plataforma parceira.</p>
+        <p style="margin-top: 8px;">🔹 <b>Regra:</b> Cada $1 depositado = 1 ticket no sorteio da roleta ao vivo!</p>
       </div>
     </div>
 
-    <!-- Seção da Roleta -->
+    <!-- Seção da Roleta Estilo CS2 -->
     <div class="roulette-section">
-      <h2>Roleta de Participantes</h2>
+      <h3>Roleta de Vencedores ao Vivo</h3>
       <div class="roulette-container">
         <div class="pointer pointer-top"></div>
         <div class="pointer pointer-bottom"></div>
         <div class="roulette-track" id="track"></div>
       </div>
-      <button class="btn" onclick="rodarRoleta()">Girar Roleta (Ao Vivo)</button>
+      <button class="btn" style="width: auto; padding: 10px 30px;" onclick="rodarRoleta()">Girar Roleta</button>
     </div>
 
-    <!-- Formulario de Inscrição -->
+    <!-- Últimas Entradas Grid -->
+    <div class="entries-section">
+      <h3>Últimas Entradas</h3>
+      <div class="entries-grid" id="gridEntradas">
+        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Lucas" /><span>Lucas Dias</span></div>
+        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Renan" /><span>Renan Backico</span></div>
+        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ricardo" /><span>Ricardo</span></div>
+        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mikael" /><span>MikaelPower</span></div>
+      </div>
+    </div>
+
+    <!-- Formulário de Inscrição -->
     <div class="form-section">
-      <h2>Enviar Comprovante de Depósito</h2>
-      <form id="sorteioForm" style="margin-top: 15px;">
+      <h3 style="margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; color: #00ff88;">Enviar Comprovante de Depósito</h3>
+      <form id="sorteioForm">
         <div class="form-group">
-          <label>ID da Plataforma (CSGO.NET / CSCase):</label>
+          <label>ID da Plataforma / Perfil:</label>
           <input type="text" id="id_plataforma" required placeholder="Ex: 3483201" />
         </div>
         <div class="form-group">
@@ -72,34 +115,29 @@
           <input type="number" step="0.01" id="valor_depositado" required placeholder="Ex: 10.00" />
         </div>
         <div class="form-group">
-          <label>Seu Discord:</label>
+          <label>Seu Discord / Contato:</label>
           <input type="text" id="discord" required placeholder="Ex: MikaelPower_" />
-        </div>
-        <div class="form-group">
-          <label>Seu WhatsApp / Telefone:</label>
-          <input type="text" id="telefone" required placeholder="Ex: (11) 90000-0000" />
         </div>
         <div class="form-group">
           <label>Print do Comprovante:</label>
           <input type="file" id="comprovante" accept="image/*" required />
         </div>
-        <button type="submit" class="btn" style="width: 100%;">Enviar para Validação</button>
+        <button type="submit" class="btn">Enviar para Validação</button>
       </form>
     </div>
+
   </div>
 
   <script>
-    // Configuração do Supabase
     const SUPABASE_URL = "https://utbfvynphldzwyapfuyu.supabase.co";
-    const SUPABASE_KEY = "SUA_ANON_KEY_AQUI"; // Cole aqui a chave que começa com ey...
+    const SUPABASE_KEY = "SUA_ANON_KEY_AQUI"; 
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Dados de exemplo para testar a roleta
     const demoUsers = [
       { name: "MikaelPower", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Mikael" },
       { name: "Ricardo", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Ricardo" },
-      { name: "David", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=David" },
-      { name: "Mauro", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Mauro" }
+      { name: "Lucas", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucas" },
+      { name: "Renan", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Renan" }
     ];
 
     function montarRoleta() {
@@ -117,11 +155,10 @@
 
     function rodarRoleta() {
       const track = document.getElementById('track');
-      const cardWidth = 130;
+      const cardWidth = 120;
       const winnerIndex = 42;
       const containerWidth = track.parentElement.offsetWidth;
       const targetOffset = (winnerIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2);
-      
       track.style.transform = `translateX(-${targetOffset}px)`;
     }
 
