@@ -19,7 +19,7 @@
     /* Main Skin Banner Card */
     .skin-banner-card { background: #111823; border: 1px solid #1f2d42; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
     .skin-title { font-size: 1.3rem; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; color: #fff; }
-    .skin-banner-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 8px; border: 1px solid #253650; margin-bottom: 15px; }
+    .skin-banner-img { width: 100%; max-height: 320px; object-fit: contain; background: #080b10; border-radius: 8px; border: 1px solid #253650; margin-bottom: 15px; padding: 10px; }
     .skin-value { font-size: 1.8rem; font-weight: bold; color: #00ff88; margin: 10px 0; }
     .rules-box { text-align: left; background: #080b10; padding: 15px; border-radius: 6px; border: 1px solid #1a2332; font-size: 0.85rem; color: #9ca3af; margin-top: 15px; line-height: 1.5; }
     .rules-box b { color: #fff; }
@@ -29,7 +29,7 @@
     .roulette-container { position: relative; width: 100%; height: 130px; overflow: hidden; background: #080b10; border-radius: 6px; border: 2px solid #1f2d42; margin: 15px 0; }
     .roulette-track { display: flex; position: absolute; left: 0; top: 8px; transition: transform 5s cubic-bezier(0.15, 0.9, 0.2, 1); }
     .user-card { width: 110px; height: 110px; margin: 0 4px; background: #162030; border-radius: 6px; border: 1px solid #293a56; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-    .user-card img { width: 50px; height: 50px; border-radius: 50%; margin-bottom: 6px; border: 2px solid #00ff88; }
+    .user-card img { width: 45px; height: 45px; border-radius: 50%; margin-bottom: 6px; border: 2px solid #00ff88; object-fit: cover; background: #111; }
     .user-card span { font-size: 0.75rem; font-weight: bold; color: #e5e7eb; max-width: 95px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     
     .pointer { position: absolute; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; z-index: 10; }
@@ -41,7 +41,7 @@
     .entries-section h3 { text-align: center; text-transform: uppercase; margin-bottom: 15px; font-size: 1rem; letter-spacing: 1px; color: #9ca3af; }
     .entries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
     .entry-item { background: #162030; border: 1px solid #253650; border-radius: 6px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .entry-item img { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 5px; }
+    .entry-item img { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 5px; object-fit: cover; background: #111; }
     .entry-item span { font-size: 0.7rem; color: #d1d5db; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
 
     /* Formulário */
@@ -53,6 +53,7 @@
     
     .btn { background: #00ff88; color: #000; font-weight: bold; border: none; padding: 12px 24px; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: 0.2s; text-transform: uppercase; width: 100%; }
     .btn:hover { background: #00cc6a; box-shadow: 0 0 15px rgba(0,255,136,0.4); }
+    .msg-feedback { margin-top: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -72,7 +73,7 @@
     <!-- Banner Principal da Skin -->
     <div class="skin-banner-card">
       <div class="skin-title">Sorteio Diário CSGONET ★ Bowie Autotronic</div>
-      <img src="https://images.unsplash.com/photo-1593118247619-e2d6f055728a?auto=format&fit=crop&w=800&q=80" class="skin-banner-img" alt="Skin CS2" />
+      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpotLu8JAllx8zJYQJD_9W7m5O0m_7zO6-FxDxUv8Nz2rGQ9Nn32wO28kVtam6mcdOWclQ9ZgyG-Vi6yefvjJ-6uJ2Yz3Y36XIg4i3amkG0hxlSLrs4z6rOQ9o/360fx360f" class="skin-banner-img" alt="Bowie Autotronic" />
       <div class="skin-value">R$ 1.200,00</div>
       <div class="rules-box">
         <p>⭐ <b>SORTEIO EXCLUSIVO</b> para quem depositar no MÍNIMO $1 dólar com o cupom na plataforma parceira.</p>
@@ -105,7 +106,7 @@
     <!-- Formulário de Inscrição -->
     <div class="form-section">
       <h3 style="margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; color: #00ff88;">Enviar Comprovante de Depósito</h3>
-      <form id="sorteioForm">
+      <form id="sorteioForm" onsubmit="enviarInscricao(event)">
         <div class="form-group">
           <label>ID da Plataforma / Perfil:</label>
           <input type="text" id="id_plataforma" required placeholder="Ex: 3483201" />
@@ -122,7 +123,8 @@
           <label>Print do Comprovante:</label>
           <input type="file" id="comprovante" accept="image/*" required />
         </div>
-        <button type="submit" class="btn">Enviar para Validação</button>
+        <button type="submit" class="btn" id="btnEnviar">Enviar para Validação</button>
+        <div id="feedback" class="msg-feedback"></div>
       </form>
     </div>
 
@@ -130,7 +132,7 @@
 
   <script>
     const SUPABASE_URL = "https://utbfvynphldzwyapfuyu.supabase.co";
-    const SUPABASE_KEY = "SUA_ANON_KEY_AQUI"; 
+    const SUPABASE_KEY = "SUA_ANON_KEY_AQUI"; // Certifica-te de colocar a tua chave anon correta aqui se ainda não o fizeste
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const demoUsers = [
@@ -160,6 +162,66 @@
       const containerWidth = track.parentElement.offsetWidth;
       const targetOffset = (winnerIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2);
       track.style.transform = `translateX(-${targetOffset}px)`;
+    }
+
+    async function enviarInscricao(event) {
+      event.preventDefault();
+      const btn = document.getElementById('btnEnviar');
+      const feedback = document.getElementById('feedback');
+      
+      btn.disabled = true;
+      btn.innerText = "A enviar...";
+      feedback.style.color = "#9ca3af";
+      feedback.innerText = "A enviar comprovante e dados...";
+
+      try {
+        const idPlataforma = document.getElementById('id_plataforma').value;
+        const valorDepositado = parseFloat(document.getElementById('valor_depositado').value);
+        const discord = document.getElementById('discord').value;
+        const fileInput = document.getElementById('comprovante');
+        const file = fileInput.files[0];
+
+        let comprovanteUrl = "";
+
+        if (file) {
+          const fileName = `${Date.now()}_${file.name}`;
+          const { data: uploadData, error: uploadError } = await _supabase.storage
+            .from('comprovantes')
+            .upload(fileName, file);
+
+          if (uploadError) throw uploadError;
+
+          const { data: publicURLData } = _supabase.storage
+            .from('comprovantes')
+            .getPublicUrl(fileName);
+
+          comprovanteUrl = publicURLData.publicUrl;
+        }
+
+        const { error: insertError } = await _supabase
+          .from('inscricoes')
+          .insert([
+            { 
+              id_plataforma: idPlataforma, 
+              valor_depositado: valorDepositado, 
+              discord: discord, 
+              comprovante_url: comprovanteUrl 
+            }
+          ]);
+
+        if (insertError) throw insertError;
+
+        feedback.style.color = "#00ff88";
+        feedback.innerText = "Comprovante enviado com sucesso! Boa sorte no sorteio!";
+        document.getElementById('sorteioForm').reset();
+      } catch (err) {
+        console.error(err);
+        feedback.style.color = "#ff4444";
+        feedback.innerText = "Erro ao enviar. Verifica a consola ou tenta novamente.";
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Enviar para Validação";
+      }
     }
 
     montarRoleta();
