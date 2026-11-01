@@ -3,228 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sorteios MikaelPower</title>
+  <title>MikaelPower CS2 Giveaways</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0b0e14; color: #fff; display: flex; flex-direction: column; align-items: center; }
-    
-    /* Top Navigation Tabs */
-    .nav-tabs { width: 100%; background: #0f141d; border-bottom: 2px solid #1a2332; display: flex; justify-content: center; overflow-x: auto; padding: 10px 0; }
-    .nav-tab { padding: 8px 15px; margin: 0 4px; background: #151d2a; border: 1px solid #222f43; border-radius: 4px; color: #9ca3af; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-    .nav-tab:hover, .nav-tab.active { background: #1e293b; color: #00ff88; border-color: #00ff88; }
+    :root {
+      --primary: #00ff88;
+      --primary-glow: rgba(0, 255, 136, 0.25);
+      --bg-dark: #07090e;
+      --card-bg: #0f1520;
+      --card-border: #1b263b;
+      --text-muted: #8b9bb4;
+      --rarity-cover: #eb4b4b;
+    }
 
-    .container { max-width: 950px; width: 100%; padding: 20px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 30px 30px, 30px 30px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    /* Top Navigation Tabs */
+    .nav-tabs {
+      width: 100%;
+      background: #0b0f17;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 10px;
+      overflow-x: auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .nav-tab {
+      padding: 10px 20px;
+      background: #121927;
+      border: 1px solid #202d44;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover {
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .nav-tab.active {
+      background: linear-gradient(180deg, rgba(0,255,136,0.15) 0%, rgba(15,21,32,1) 100%);
+      color: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .container { max-width: 1000px; width: 100%; padding: 30px 15px; }
 
     /* Main Skin Banner Card */
-    .skin-banner-card { background: #111823; border: 1px solid #1f2d42; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-    .skin-title { font-size: 1.3rem; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; color: #fff; }
-    .skin-banner-img { width: 100%; max-height: 320px; object-fit: contain; background: #080b10; border-radius: 8px; border: 1px solid #253650; margin-bottom: 15px; padding: 10px; }
-    .skin-value { font-size: 1.8rem; font-weight: bold; color: #00ff88; margin: 10px 0; }
-    .rules-box { text-align: left; background: #080b10; padding: 15px; border-radius: 6px; border: 1px solid #1a2332; font-size: 0.85rem; color: #9ca3af; margin-top: 15px; line-height: 1.5; }
-    .rules-box b { color: #fff; }
-
-    /* Roleta Style CS2 */
-    .roulette-section { margin: 30px 0; background: #111823; padding: 20px; border-radius: 10px; border: 1px solid #1f2d42; text-align: center; }
-    .roulette-container { position: relative; width: 100%; height: 130px; overflow: hidden; background: #080b10; border-radius: 6px; border: 2px solid #1f2d42; margin: 15px 0; }
-    .roulette-track { display: flex; position: absolute; left: 0; top: 8px; transition: transform 5s cubic-bezier(0.15, 0.9, 0.2, 1); }
-    .user-card { width: 110px; height: 110px; margin: 0 4px; background: #162030; border-radius: 6px; border: 1px solid #293a56; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-    .user-card img { width: 45px; height: 45px; border-radius: 50%; margin-bottom: 6px; border: 2px solid #00ff88; object-fit: cover; background: #111; }
-    .user-card span { font-size: 0.75rem; font-weight: bold; color: #e5e7eb; max-width: 95px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    
-    .pointer { position: absolute; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; z-index: 10; }
-    .pointer-top { top: 0; border-top: 12px solid #00ff88; }
-    .pointer-bottom { bottom: 0; border-bottom: 12px solid #00ff88; }
-
-    /* Últimas Entradas Grid */
-    .entries-section { margin: 30px 0; background: #111823; padding: 20px; border-radius: 10px; border: 1px solid #1f2d42; }
-    .entries-section h3 { text-align: center; text-transform: uppercase; margin-bottom: 15px; font-size: 1rem; letter-spacing: 1px; color: #9ca3af; }
-    .entries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
-    .entry-item { background: #162030; border: 1px solid #253650; border-radius: 6px; padding: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .entry-item img { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 5px; object-fit: cover; background: #111; }
-    .entry-item span { font-size: 0.7rem; color: #d1d5db; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
-
-    /* Formulário */
-    .form-section { background: #111823; padding: 25px; border-radius: 10px; border: 1px solid #1f2d42; margin-top: 30px; }
-    .form-group { margin-bottom: 15px; text-align: left; }
-    .form-group label { display: block; margin-bottom: 6px; color: #9ca3af; font-size: 0.85rem; text-transform: uppercase; }
-    .form-group input { width: 100%; padding: 10px; background: #080b10; border: 1px solid #1f2d42; border-radius: 6px; color: #fff; font-size: 1rem; }
-    .form-group input:focus { border-color: #00ff88; outline: none; }
-    
-    .btn { background: #00ff88; color: #000; font-weight: bold; border: none; padding: 12px 24px; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: 0.2s; text-transform: uppercase; width: 100%; }
-    .btn:hover { background: #00cc6a; box-shadow: 0 0 15px rgba(0,255,136,0.4); }
-    .msg-feedback { margin-top: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; }
-  </style>
-</head>
-<body>
-
-  <!-- Abas de Navegação Superiores -->
-  <div class="nav-tabs">
-    <div class="nav-tab active">Sorteio Diário</div>
-    <div class="nav-tab">Sorteio CSGONET Mensal</div>
-    <div class="nav-tab">Sorteio CSGONET Especial</div>
-    <div class="nav-tab">Sorteio Contrato</div>
-    <div class="nav-tab">Sorteio VIP</div>
-    <div class="nav-tab">LivePix</div>
-  </div>
-
-  <div class="container">
-    
-    <!-- Banner Principal da Skin -->
-    <div class="skin-banner-card">
-      <div class="skin-title">Sorteio Diário CSGONET ★ Bowie Autotronic</div>
-      <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpotLu8JAllx8zJYQJD_9W7m5O0m_7zO6-FxDxUv8Nz2rGQ9Nn32wO28kVtam6mcdOWclQ9ZgyG-Vi6yefvjJ-6uJ2Yz3Y36XIg4i3amkG0hxlSLrs4z6rOQ9o/360fx360f" class="skin-banner-img" alt="Bowie Autotronic" />
-      <div class="skin-value">R$ 1.200,00</div>
-      <div class="rules-box">
-        <p>⭐ <b>SORTEIO EXCLUSIVO</b> para quem depositar no MÍNIMO $1 dólar com o cupom na plataforma parceira.</p>
-        <p style="margin-top: 8px;">🔹 <b>Regra:</b> Cada $1 depositado = 1 ticket no sorteio da roleta ao vivo!</p>
-      </div>
-    </div>
-
-    <!-- Seção da Roleta Estilo CS2 -->
-    <div class="roulette-section">
-      <h3>Roleta de Vencedores ao Vivo</h3>
-      <div class="roulette-container">
-        <div class="pointer pointer-top"></div>
-        <div class="pointer pointer-bottom"></div>
-        <div class="roulette-track" id="track"></div>
-      </div>
-      <button class="btn" style="width: auto; padding: 10px 30px;" onclick="rodarRoleta()">Girar Roleta</button>
-    </div>
-
-    <!-- Últimas Entradas Grid -->
-    <div class="entries-section">
-      <h3>Últimas Entradas</h3>
-      <div class="entries-grid" id="gridEntradas">
-        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Lucas" /><span>Lucas Dias</span></div>
-        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Renan" /><span>Renan Backico</span></div>
-        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ricardo" /><span>Ricardo</span></div>
-        <div class="entry-item"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mikael" /><span>MikaelPower</span></div>
-      </div>
-    </div>
-
-    <!-- Formulário de Inscrição -->
-    <div class="form-section">
-      <h3 style="margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; color: #00ff88;">Enviar Comprovante de Depósito</h3>
-      <form id="sorteioForm" onsubmit="enviarInscricao(event)">
-        <div class="form-group">
-          <label>ID da Plataforma / Perfil:</label>
-          <input type="text" id="id_plataforma" required placeholder="Ex: 3483201" />
-        </div>
-        <div class="form-group">
-          <label>Valor Depositado (US$):</label>
-          <input type="number" step="0.01" id="valor_depositado" required placeholder="Ex: 10.00" />
-        </div>
-        <div class="form-group">
-          <label>Seu Discord / Contato:</label>
-          <input type="text" id="discord" required placeholder="Ex: MikaelPower_" />
-        </div>
-        <div class="form-group">
-          <label>Print do Comprovante:</label>
-          <input type="file" id="comprovante" accept="image/*" required />
-        </div>
-        <button type="submit" class="btn" id="btnEnviar">Enviar para Validação</button>
-        <div id="feedback" class="msg-feedback"></div>
-      </form>
-    </div>
-
-  </div>
-
-  <script>
-    const SUPABASE_URL = "https://utbfvynphldzwyapfuyu.supabase.co";
-    const SUPABASE_KEY = "SUA_ANON_KEY_AQUI"; // Certifica-te de colocar a tua chave anon correta aqui se ainda não o fizeste
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const demoUsers = [
-      { name: "MikaelPower", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Mikael" },
-      { name: "Ricardo", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Ricardo" },
-      { name: "Lucas", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucas" },
-      { name: "Renan", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Renan" }
-    ];
-
-    function montarRoleta() {
-      const track = document.getElementById('track');
-      track.innerHTML = '';
-      for(let i=0; i<15; i++) {
-        demoUsers.forEach(u => {
-          const card = document.createElement('div');
-          card.className = 'user-card';
-          card.innerHTML = `<img src="${u.avatar}" /><span>${u.name}</span>`;
-          track.appendChild(card);
-        });
-      }
+    .skin-banner-card {
+      background: linear-gradient(145deg, #121a28 0%, #0a0e16 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 25px;
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
     }
 
-    function rodarRoleta() {
-      const track = document.getElementById('track');
-      const cardWidth = 120;
-      const winnerIndex = 42;
-      const containerWidth = track.parentElement.offsetWidth;
-      const targetOffset = (winnerIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2);
-      track.style.transform = `translateX(-${targetOffset}px)`;
-    }
-
-    async function enviarInscricao(event) {
-      event.preventDefault();
-      const btn = document.getElementById('btnEnviar');
-      const feedback = document.getElementById('feedback');
-      
-      btn.disabled = true;
-      btn.innerText = "A enviar...";
-      feedback.style.color = "#9ca3af";
-      feedback.innerText = "A enviar comprovante e dados...";
-
-      try {
-        const idPlataforma = document.getElementById('id_plataforma').value;
-        const valorDepositado = parseFloat(document.getElementById('valor_depositado').value);
-        const discord = document.getElementById('discord').value;
-        const fileInput = document.getElementById('comprovante');
-        const file = fileInput.files[0];
-
-        let comprovanteUrl = "";
-
-        if (file) {
-          const fileName = `${Date.now()}_${file.name}`;
-          const { data: uploadData, error: uploadError } = await _supabase.storage
-            .from('comprovantes')
-            .upload(fileName, file);
-
-          if (uploadError) throw uploadError;
-
-          const { data: publicURLData } = _supabase.storage
-            .from('comprovantes')
-            .getPublicUrl(fileName);
-
-          comprovanteUrl = publicURLData.publicUrl;
-        }
-
-        const { error: insertError } = await _supabase
-          .from('inscricoes')
-          .insert([
-            { 
-              id_plataforma: idPlataforma, 
-              valor_depositado: valorDepositado, 
-              discord: discord, 
-              comprovante_url: comprovanteUrl 
-            }
-          ]);
-
-        if (insertError) throw insertError;
-
-        feedback.style.color = "#00ff88";
-        feedback.innerText = "Comprovante enviado com sucesso! Boa sorte no sorteio!";
-        document.getElementById('sorteioForm').reset();
-      } catch (err) {
-        console.error(err);
-        feedback.style.color = "#ff4444";
-        feedback.innerText = "Erro ao enviar. Verifica a consola ou tenta novamente.";
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Enviar para Validação";
-      }
-    }
-
-    montarRoleta();
-  </script>
-</body>
-</html>
+    .skin-banner-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient
